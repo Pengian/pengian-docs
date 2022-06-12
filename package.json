@@ -1,0 +1,20 @@
+{
+  "name": "pengian-docs-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "pengian",
+    "email": "pengian@foxmail.com"
+  },
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.42",
+    "typescript": "^4.7.3",
+    "vitepress": "^1.0.0-alpha.1"
+  }
+}
