@@ -5,4 +5,7 @@ export default defineConfig({
   description: "Pengian'docs for backend",
   base: '/pengian-docs',
   lang: 'zh',
+  themeConfig: {
+    nav: [{ text: 'Java', link: '/java' }],
+  },
 });
