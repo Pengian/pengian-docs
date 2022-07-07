@@ -6,6 +6,6 @@ export default defineConfig({
   base: '/pengian-docs',
   lang: 'zh',
   themeConfig: {
-    nav: [{ text: 'Java', link: '/java' }],
+    nav: [{ text: 'Java', link: '/java/' }],
   },
 });
