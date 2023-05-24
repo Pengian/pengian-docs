@@ -1,1 +1,7 @@
 node_modules
+*.lock
+package-lock.json
+**/.vuepress/dist/*
+**/.vitepress/dist/*
+
+docs
