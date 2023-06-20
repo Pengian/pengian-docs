@@ -6,7 +6,7 @@ export default defineConfig({
   description: "个人技术文档-后端",
   base: "/pengian-docs/BE/",
   lang: "zh",
-  outDir: "docs",
+  outDir: "docs-bf",
   head: [
     [
       "link",

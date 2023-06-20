@@ -1,0 +1,89 @@
+version: '1.0'
+name: main-pipeline
+displayName: Docs
+triggers:
+  trigger: auto
+  push:
+    tags:
+      prefix:
+        - v
+stages:
+  - name: compile
+    displayName: 编译
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: build@nodejs
+        name: build_nodejs
+        displayName: Nodejs 构建
+        nodeVersion: 16.14.2
+        commands:
+          - npm install --registry=https://registry.npmmirror.com/ -g yarn
+          - yarn
+          - yarn build
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./docs
+        caches:
+          - ~/.npm
+          - ~/.yarn
+        strategy:
+          retry: '0'
+      - step: publish@general_artifacts
+        name: publish_general_artifacts
+        displayName: 上传制品
+        dependArtifact: BUILD_ARTIFACT
+        artifactName: output
+        strategy:
+          retry: '0'
+        dependsOn: build_nodejs
+  - name: release
+    displayName: BE文档发布
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: deploy@agent
+        name: deploy_agent
+        displayName: 主机部署
+        hostGroupID:
+          ID: huawei
+          hostID:
+            - af44f3af-cd53-4b5e-8484-9563b25c7c64
+        deployArtifact:
+          - source: build
+            name: output
+            target: /home/gitee_go/deploy
+            dependArtifact: BUILD_ARTIFACT
+        script:
+          - sudo tar -xzvf /home/gitee_go/deploy/output.tar.gz
+          - '# cp -rf /home/gitee_go/deploy/dist /home/nginx/html'
+          - ls .
+          - ls ./docs
+          - cp -rf ./docs /home/nginx/html
+        strategy:
+          retry: '0'
+      - step: publish@release_artifacts
+        name: publish_release_artifacts
+        displayName: 发布
+        dependArtifact: output
+        version: 1.0.0.0
+        autoIncrement: true
+        notify:
+          - certificate: f4348c40-b8c8-013a-54a3-32d12ef751fd
+            events:
+              - success
+              - fail
+              - cancel
+            content:
+              - repository
+              - pipeline
+              - stage
+              - task
+              - operator
+              - branch
+              - detail
+            type: weixin
+        strategy:
+          retry: '0'
+        dependsOn: deploy_agent
